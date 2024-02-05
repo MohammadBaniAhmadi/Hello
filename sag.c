@@ -1452,12 +1452,659 @@ void checkout(char* namee){
     SetCurrentDirectory(path);
 }
 
+void grep(char* file,char* word){
+    char* path = _getcwd(NULL,MAX_PATH);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    FILE* source = fopen(file,"r");
+    int line = 0;
+    char khat[1000];
+    khat[0] = '\0';
+    while(fgets(khat,sizeof(khat),source)){
+        line++;
+        if(strstr(khat,word)!=NULL){
+            char* token = strtok(khat," ");
+            while(token!=NULL){
+                if(strcmp(token,word)==0){
+                    printf("\x1b[34m%s \x1b[0m",token);
+                }
+                else{
+                    printf("%s ",token);
+                }
+                token = strtok(NULL," ");
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void grep_(char* file,char* word,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    char* copy_path = _getcwd(NULL,MAX_PATH);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    SetCurrentDirectory(id);
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry = readdir(dir))!=NULL){
+        if(strcmp(entry->d_name,".")!=0 && strcmp(entry->d_name,"..")!=0){
+            SetCurrentDirectory(entry->d_name);
+            struct dirent* entri;
+            DIR* newdir = opendir(".");
+            while((entri = readdir(newdir))!=NULL){
+                if(strcmp(entri->d_name,file)==0){
+                    FILE* source = fopen(file,"r");
+                    int line = 0;
+                    char khat[1000];
+                    khat[0] = '\0';
+                    while(fgets(khat,sizeof(khat),source)){
+                       // printf("%s\n%s",khat,word);
+
+                        line++;
+                        if(strstr(khat,word)!=NULL){
+                            char* token = strtok(khat," ");
+                            while(token!=NULL){
+                                if(strcmp(token,word)==0){
+                                    printf("\x1b[34m%s \x1b[0m",token);
+                                }
+                                else{
+                                    printf("%s ",token);
+                                }
+                                token = strtok(NULL," ");
+                            }
+                        }
+                    }    
+                }
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void grepp(char* file,char* word,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    char* copy_path = _getcwd(NULL,MAX_PATH);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    //printf("%s\n",dirname);
+    SetCurrentDirectory("C:\\sag base\\commit");
+    SetCurrentDirectory(id);
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    //printf("1\n");
+    while((entry = readdir(dir))!=NULL){
+        if(strcmp(entry->d_name,".")!=0 && strcmp(entry->d_name,"..")!=0){
+            SetCurrentDirectory(entry->d_name);
+            struct dirent* entri;
+            DIR* newdir = opendir(".");
+            while((entri = readdir(newdir))!=NULL){
+                if(strcmp(entri->d_name,file)==0){
+                    FILE* source = fopen(file,"r");
+                    int line = 0;
+                    char khat[1000];
+                    khat[0] = '\0';
+                    while(fgets(khat,sizeof(khat),source)){
+                        line++;
+                        if(strstr(khat,word)!=NULL){
+                            printf("%d\n",line);
+                        }
+                    }    
+                }
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void grepp_(char* file,char*word){
+    char* path = _getcwd(NULL,MAX_PATH);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    FILE* source = fopen(file,"r");
+    int line = 0;
+    char khat[1000];
+    khat[0] = '\0';
+    while(fgets(khat,sizeof(khat),source)){
+        line++;
+        if(strstr(khat,word)!=NULL){
+            printf("%d\n",line);
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void tag(char* name){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    while((entryy = readdir(diri))!=NULL){
+        if(strcmp(entryy->d_name,".")!= 0 && strcmp(entryy->d_name,"..")!=0){
+            index++;
+        }
+    }
+    index = index/2 - 1;
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry=readdir(dir))!= NULL){
+        if(strcmp(entry->d_name,filename) == 0){
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 1){
+        perror("Tag exists!\n");
+        exit(EXIT_FAILURE);
+    }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_m(char* name,char* message){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    while((entryy = readdir(diri))!=NULL){
+        if(strcmp(entryy->d_name,".")!= 0 && strcmp(entryy->d_name,"..")!=0){
+            index++;
+        }
+    }
+    index = index/2 - 1;
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry=readdir(dir))!= NULL){
+        if(strcmp(entry->d_name,filename) == 0){
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 1){
+        perror("Tag exists!\n");
+        exit(EXIT_FAILURE);
+    }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ntag message: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,message,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_c(char* name,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    int index = 0;
+    for(int i = 0;i<strlen(id);i++){
+        index = index*10 + id[i] - 48;
+    }
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry=readdir(dir))!= NULL){
+        if(strcmp(entry->d_name,filename) == 0){
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 1){
+        perror("Tag exists!\n");
+        exit(EXIT_FAILURE);
+    }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_f(char* name){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    while((entryy = readdir(diri))!=NULL){
+        if(strcmp(entryy->d_name,".")!= 0 && strcmp(entryy->d_name,"..")!=0){
+            index++;
+        }
+    }
+    index = index/2 - 1;
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    // DIR* dir = opendir(".");
+    // struct dirent* entry;
+    // while((entry=readdir(dir))!= NULL){
+    //     if(strcmp(entry->d_name,filename) == 0){
+    //         flag = 1;
+    //         break;
+    //     }
+    // }
+    // if (flag == 1){
+    //     perror("Tag exists!\n");
+    //     exit(EXIT_FAILURE);
+    // }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_mc(char* name,char* message,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    for(int i = 0;i<strlen(id);i++){
+        index = index*10 + id[i] - 48;
+    }
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry=readdir(dir))!= NULL){
+        if(strcmp(entry->d_name,filename) == 0){
+            flag = 1;
+            break;
+        }
+    }
+    if (flag == 1){
+        perror("Tag exists!\n");
+        exit(EXIT_FAILURE);
+    }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ntag message: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,message,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_mf(char* name,char* message){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    while((entryy = readdir(diri))!=NULL){
+        if(strcmp(entryy->d_name,".")!= 0 && strcmp(entryy->d_name,"..")!=0){
+            index++;
+        }
+    }
+    index = index/2 - 1;
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    // DIR* dir = opendir(".");
+    // struct dirent* entry;
+    // while((entry=readdir(dir))!= NULL){
+    //     if(strcmp(entry->d_name,filename) == 0){
+    //         flag = 1;
+    //         break;
+    //     }
+    // }
+    // if (flag == 1){
+    //     perror("Tag exists!\n");
+    //     exit(EXIT_FAILURE);
+    // }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ntag message: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,message,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_cf(char* name,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    int index = 0;
+    for(int i = 0;i<strlen(id);i++){
+        index = index*10 + id[i] - 48;
+    }
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    int flag = 0;
+    // DIR* dir = opendir(".");
+    // struct dirent* entry;
+    // while((entry=readdir(dir))!= NULL){
+    //     if(strcmp(entry->d_name,filename) == 0){
+    //         flag = 1;
+    //         break;
+    //     }
+    // }
+    // if (flag == 1){
+    //     perror("Tag exists!\n");
+    //     exit(EXIT_FAILURE);
+    // }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag_mcf(char* name,char* message,char* id){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("sag");
+    FILE* eemail = fopen("email.txt","r");
+    char email[100];
+    fgets(email,sizeof(email),eemail);
+    FILE* nname = fopen("name.txt","r");
+    char esm[100];
+    fgets(esm,sizeof(esm),nname);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    SetCurrentDirectory("C:\\sag base\\commit");
+    DIR* diri = opendir(".");
+    struct dirent* entryy;
+    int index = 0;
+    for(int i = 0;i<strlen(id);i++){
+        index = index*10 + id[i] - 48;
+    }
+    SetCurrentDirectory("C:\\sag base\\tag");
+    char filename[100];
+    filename[0] = '\0';
+    sprintf(filename,"%s.txt",name);
+    // int flag = 0;
+    // DIR* dir = opendir(".");
+    // struct dirent* entry;
+    // while((entry=readdir(dir))!= NULL){
+    //     if(strcmp(entry->d_name,filename) == 0){
+    //         flag = 1;
+    //         break;
+    //     }
+    // }
+    // if (flag == 1){
+    //     perror("Tag exists!\n");
+    //     exit(EXIT_FAILURE);
+    // }
+    FILE* file = fopen(filename,"w");
+    time_t currentTime;
+    struct tm* localTime;
+    time(&currentTime);
+    localTime = localtime(&currentTime);
+    fprintf(file,"tag name: %s\ntag message: %s\ndate: %d-%02d-%02d %02d:%02d\nname: %s\nemail: %s\nid: %d\n\n",name,message,localTime->tm_year+1900,localTime->tm_mon + 1,localTime->tm_mday,localTime->tm_hour,localTime->tm_min , esm,email,index);
+    
+    SetCurrentDirectory(path);
+}
+
+void tag__(){
+    char* path = _getcwd(NULL,MAX_PATH);
+    SetCurrentDirectory("C:\\sag base\\tag");
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry = readdir(dir))!=NULL){
+        if(strcmp(entry->d_name,".")!= 0 && strcmp(entry->d_name,"..")!=0){
+            FILE* file = fopen(entry->d_name,"r");
+            char line[1000];
+            line[0] = '\0';
+            while(fgets(line,sizeof(line),file)){
+                puts(line);
+            }
+        }
+    } 
+    SetCurrentDirectory(path);
+}
+
+void tag_show(char* name){
+    char* path = _getcwd(NULL,MAX_PATH);
+    strcat(name,".txt");
+    SetCurrentDirectory("C:\\sag base\\tag");
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    while((entry = readdir(dir))!= NULL){
+        if(strcmp(entry->d_name,name)==0){
+            FILE* file = fopen(name,"r");
+            char line[1000];
+            line[0] = '\0';
+            while(fgets(line,sizeof(line),file)){
+                puts(line);
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void diff(char* file1,char* file2){
+    char* path = _getcwd(NULL,MAX_PATH);
+    FILE* first = fopen(file1,"r");
+    FILE* second = fopen(file2,"r");
+    char line1[1000];
+    char line2[1000];
+    int one = 0;
+    int two = 0;
+    while(fgets(line1,sizeof(line1),first)){
+        one++;
+        int flag = 0;
+        for(int i = 0;i<strlen(line1);i++){
+            if(line1[i] != ' ' && line1[i]!= '\n' && line1[i] != '\t'){
+                flag = 1;
+                break;
+            }
+        }
+        if(flag == 0){
+            continue;
+        }
+        else{
+            int flagg = 0;
+            fgets(line2,sizeof(line2),second);
+            two++;
+            for(int i = 0;i<strlen(line2);i++){
+                if(line2[i] != ' ' && line2[i]!= '\n' && line2[i] != '\t'){
+                    flagg = 1;
+                    break;
+                }   
+            }
+            while(flagg == 0){
+                two++;
+                fgets(line2,sizeof(line2),second);
+                for(int i = 0;i<strlen(line2);i++){
+                    if(line2[i] != ' ' && line2[i]!= '\n' && line2[i] != '\t'){
+                        flagg = 1;
+                        break;
+                    }   
+                }
+            }
+            if(strcmp(line1,line2)!=0){
+                printf("%s %d\n\x1b[34m%s\x1b[0m\n%s %d\n\x1b[32m%s\x1b[0m\n",file1,one,line1,file2,two,line2);
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
+void diff_(char* file1,char* file2, int begin1 , int end1 , int begin2,int end2){
+    char* path = _getcwd(NULL,MAX_PATH);
+    FILE* first = fopen(file1,"r");
+    FILE* second = fopen(file2,"r");
+    char line1[1000];
+    char line2[1000];
+    int one = 0;
+    int two = 0;
+    while(fgets(line1,sizeof(line1),first)){
+        one++;
+        int flag = 0;
+        for(int i = 0;i<strlen(line1);i++){
+            if(line1[i] != ' ' && line1[i]!= '\n' && line1[i] != '\t'){
+                flag = 1;
+                break;
+            }
+        }
+        if(flag == 0 || one<begin1 || one>end1){
+            continue;
+        }
+        else{
+            int flagg = 0;
+            fgets(line2,sizeof(line2),second);
+            two++;
+            for(int i = 0;i<strlen(line2);i++){
+                if(line2[i] != ' ' && line2[i]!= '\n' && line2[i] != '\t'){
+                    flagg = 1;
+                    break;
+                }   
+            }
+            while(flagg == 0 || two < begin2 || two > end2){
+                two++;
+                fgets(line2,sizeof(line2),second);
+                for(int i = 0;i<strlen(line2);i++){
+                    if(line2[i] != ' ' && line2[i]!= '\n' && line2[i] != '\t'){
+                        flagg = 1;
+                        break;
+                    }   
+                }
+            }
+            if(strcmp(line1,line2)!=0){
+                printf("%s %d\n\x1b[34m%s\x1b[0m\n%s %d\n\x1b[32m%s\x1b[0m\n",file1,one,line1,file2,two,line2);
+            }
+        }
+    }
+    SetCurrentDirectory(path);
+}
+
 int main(int argc , char** argv){
     if (argc < 2){
         perror("invalid command\n");
         return 1;
     }
-    if(strcmp(argv[1],"init")==0){
+    else if(strcmp(argv[1],"init")==0){
         if(argc != 2){
             perror("invalid command\n");
             return 1;
@@ -1467,7 +2114,7 @@ int main(int argc , char** argv){
             return 0;
         }    
     }
-    if (strcmp(argv[1] , "config") == 0){
+    else if (strcmp(argv[1] , "config") == 0){
         if(strcmp(argv[2],"-global") == 0){
             if(strcmp(argv[3],"user.name") == 0){
                 Globalname(argv[4]);
@@ -1491,7 +2138,7 @@ int main(int argc , char** argv){
             return 1;
         }
     }
-    if(strcmp(argv[1],"add")==0){
+    else if(strcmp(argv[1],"add")==0){
         if(argc == 3 && strcmp(argv[2],"-n")!= 0 && strcmp(argv[2],"-f")!= 0){
             int flag = 0;
             for(int i = 0;i<strlen(argv[2]);i++){
@@ -1519,7 +2166,7 @@ int main(int argc , char** argv){
             add_();
         }
     }
-    if(strcmp(argv[1],"reset")==0){
+    else if(strcmp(argv[1],"reset")==0){
         if(strcmp(argv[2],"-undo") == 0){
             undo();
         }
@@ -1527,7 +2174,7 @@ int main(int argc , char** argv){
             reset(argv[2]);
         }
     }
-    if(strcmp(argv[1],"commit")==0 && strcmp(argv[2],"-m")==0 && argc>3){
+    else if(strcmp(argv[1],"commit")==0 && strcmp(argv[2],"-m")==0 && argc>3){
         if(argc>4){
             if(argv[3][0] != '\"' || argv[argc-1][strlen(argv[argc-1])-1] != '\"'){
                 perror("invalid command!\n");
@@ -1547,7 +2194,7 @@ int main(int argc , char** argv){
             commit(argv[3]);
         }
     }
-    if(strcmp(argv[1],"commit")==0 && strcmp(argv[2],"-s")==0 && argc>3){
+    else if(strcmp(argv[1],"commit")==0 && strcmp(argv[2],"-s")==0 && argc>3){
         char* path = _getcwd(NULL,MAX_PATH);
         int length = argc-3;
         char new[100];
@@ -1587,7 +2234,7 @@ int main(int argc , char** argv){
         }
         
     }
-    if(strcmp(argv[1],"set")==0 && strcmp(argv[2],"-m")==0 && argc>3){
+    else if(strcmp(argv[1],"set")==0 && strcmp(argv[2],"-m")==0 && argc>3){
         if(check() == 0){
         perror("repo doesn't exist!");
         exit(EXIT_FAILURE);
@@ -1644,7 +2291,7 @@ int main(int argc , char** argv){
         SetCurrentDirectory(path);
         
     }
-    if(strcmp(argv[1],"replace")==0 && strcmp(argv[2],"-m")==0 && argc>3){
+    else if(strcmp(argv[1],"replace")==0 && strcmp(argv[2],"-m")==0 && argc>3){
         if(check() == 0){
         perror("repo doesn't exist!");
         exit(EXIT_FAILURE);
@@ -1700,7 +2347,7 @@ int main(int argc , char** argv){
         }
         SetCurrentDirectory(path);
     }
-    if(strcmp(argv[1],"remove")==0 && strcmp(argv[2],"-s")==0 && argc>3){
+    else if(strcmp(argv[1],"remove")==0 && strcmp(argv[2],"-s")==0 && argc>3){
         if(check() == 0){
         perror("repo doesn't exist!");
         exit(EXIT_FAILURE);
@@ -1739,7 +2386,7 @@ int main(int argc , char** argv){
         }
         SetCurrentDirectory(path);
     }
-    if(strcmp(argv[1],"log") == 0){
+    else if(strcmp(argv[1],"log") == 0){
         if(argc == 2){
             log();
         }
@@ -1783,10 +2430,10 @@ int main(int argc , char** argv){
         }
         
     }
-    if(strcmp(argv[1], "status") ==0 && argc == 2){
+    else if(strcmp(argv[1], "status") ==0 && argc == 2){
         status();
     }
-    if(strcmp(argv[1],"branch") == 0 && (argc == 3 || argc == 2)){
+    else if(strcmp(argv[1],"branch") == 0 && (argc == 3 || argc == 2)){
         if(argc == 3){
             branch(argv[2]);
         }
@@ -1794,8 +2441,82 @@ int main(int argc , char** argv){
             branch_();
         }
     }
-    if(strcmp(argv[1],"checkout")==0 && argc == 3){
+    else if(strcmp(argv[1],"checkout")==0 && argc == 3){
         checkout(argv[2]);
     }
+    else if(strcmp(argv[1],"grep") == 0 && argc == 6 && strcmp(argv[2],"-f") == 0 && strcmp(argv[4],"-p") == 0){
+        grep(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"grep") == 0 && argc == 8 && strcmp(argv[2],"-f") == 0 && strcmp(argv[4],"-p") == 0 && strcmp(argv[6],"-c")==0){
+        grep_(argv[3],argv[5],argv[7]);
+    }
+    else if(strcmp(argv[1],"grep") == 0 && argc == 9 && strcmp(argv[2],"-f") == 0 && strcmp(argv[4],"-p") == 0 && strcmp(argv[8],"-n")==0){
+        //printf("1");
+        grepp(argv[3],argv[5],argv[7]);
+    }
+    else if(strcmp(argv[1],"grep") == 0 && argc == 7 && strcmp(argv[2],"-f") == 0 && strcmp(argv[4],"-p") == 0 && strcmp(argv[6],"-n")==0){
+        grepp_(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && argc ==2){
+        tag__();
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==4){
+        tag(argv[3]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==6 && strcmp(argv[4],"-m")==0){
+        tag_m(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==6 && strcmp(argv[4],"-c")==0){
+        tag_c(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==5 && strcmp(argv[4],"-f")==0){
+        tag_f(argv[3]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==8 && strcmp(argv[4],"-m")==0 && strcmp(argv[6],"-c")==0){
+        tag_mc(argv[3],argv[5],argv[7]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==7 && strcmp(argv[4],"-m")==0 && strcmp(argv[6],"-f")==0){
+        tag_mf(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==7 && strcmp(argv[4],"-c")==0 && strcmp(argv[6],"-f")==0){
+        tag_cf(argv[3],argv[5]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"-a")==0 && argc ==9 && strcmp(argv[4],"-m")==0 && strcmp(argv[6],"-c")==0 && strcmp(argv[8],"-f") == 0){
+        tag_mcf(argv[3],argv[5],argv[7]);
+    }
+    else if(strcmp(argv[1],"tag")==0 && strcmp(argv[2],"show")==0 && argc == 4){
+        tag_show(argv[3]);
+    }
+    else if(strcmp(argv[1],"diff")==0 && argc == 5){
+        diff(argv[3],argv[4]);
+    }
+    else if(strcmp(argv[1],"diff")==0 && argc == 9){
+        int begin1 = 0;
+        int end1 = 0;
+        int begin2 = 0;
+        int end2 = 0;
+        int index;
+        for(int i = 0;i<strlen(argv[6]);i++){
+            if(argv[6][i] == '-'){
+                index = i;
+                break;
+            }
+            begin1 = begin1*10 + argv[6][i] - 48;
+        }
+        for(int i = index+1;i<strlen(argv[6]);i++){
+            end1 = end1*10 + argv[6][i] - 48;
+        }
 
+        for(int i = 0;i<strlen(argv[8]);i++){
+            if(argv[8][i] == '-'){
+                index = i;
+                break;
+            }
+            begin2 = begin2*10 + argv[8][i] - 48;
+        }
+        for(int i = index+1;i<strlen(argv[8]);i++){
+            end2 = end2*10 + argv[8][i] - 48;
+        }
+        diff_(argv[3],argv[4],begin1,end1,begin2,end2);
+    }
 }
