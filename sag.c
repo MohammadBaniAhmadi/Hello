@@ -146,154 +146,6 @@ void Globalemail(char* email){
     new_email(email);
 }
 
-void add(char* address){
-    if(check() == 0){
-        perror("repo doesn't exist!");
-        exit(EXIT_FAILURE);
-    }
-    char *copy_path = _getcwd(NULL, MAX_PATH);
-    char* path = _getcwd(NULL, MAX_PATH);
-    
-    //printf("%s\n",copy_path);
-    struct stat fileStat;
-    stat(address,&fileStat);
-    if (S_ISDIR(fileStat.st_mode)) {
-        char newname[100];
-        for(int i = 0;i<100;i++){
-            newname[i] = 0;
-        }
-        int x;
-        for(int i = 0;i<strlen(address);i++){
-            if(address[strlen(address)-1-i]=='\\'){
-                break;
-            }
-            x = i;
-        }
-        //x = strlen(address)-x;
-        for(int i = 0;i<strlen(address);i++){
-            if(address[strlen(address)-1-i]=='\\'){
-                break;
-            }
-            newname[x-i] = address[strlen(address)-1-i];
-        }
-        SetCurrentDirectory("C:\\sag base");
-        FILE* list = fopen("staging.txt","a");
-        fprintf(list,"%s\n",newname);
-        fclose(list);
-        DIR* dir;
-        struct dirent* entry;
-        SetCurrentDirectory(path);
-        dir = opendir(address);
-        SetCurrentDirectory(address);
-        while((entry = readdir(dir))!=NULL){
-            if(strcmp(entry->d_name,".")!= 0 && strcmp(entry->d_name,"..")!=0 && strcmp(entry->d_name,"sag")!=0){
-                add(entry->d_name);
-            }
-        }
-    } 
-    else if (S_ISREG(fileStat.st_mode)) {
-        char newname[100];
-        for(int i = 0;i<100;i++){
-            newname[i] = 0;
-        }
-        char dirname[200];
-        dirname[0] = '\0';
-        char address_[MAX_PATH];
-        address_[0] = '\0';
-        strcat(address_,path);
-        char* token = strtok(path,"\\:.");
-        while(token != NULL){
-            strcat(dirname,token);
-            token = strtok(NULL,"\\:.");
-        }
-        int x;
-        for(int i = 0;i<strlen(address);i++){
-            if(address[strlen(address)-1-i]=='\\'){
-                break;
-            }
-            x = i;
-        }
-        //x = strlen(address)-x;
-        for(int i = 0;i<strlen(address);i++){
-            if(address[strlen(address)-1-i]=='\\'){
-                break;
-            }
-            newname[x-i] = address[strlen(address)-1-i];
-        }
-        FILE* source = fopen(address,"r");
-        SetCurrentDirectory("C:\\sag base");
-        FILE* list = fopen("staging.txt","a");
-        fprintf(list,"%s\n",newname);
-        fclose(list);
-        SetCurrentDirectory("C:\\sag base\\stage");
-        struct dirent* entri;
-        DIR* directory = opendir("C:\\sag base\\stage");
-        int flag = 0;
-        while((entri = readdir(directory))!=NULL){
-            if(strcmp(entri->d_name,dirname)== 0){
-                flag = 1;
-                break;
-            }
-        }
-        if(flag == 0){
-            mkdir(dirname);
-        }
-        SetCurrentDirectory(dirname);
-        FILE* addd = fopen("address.txt","w");
-        fputs(address_,addd);
-        FILE* dest = fopen(newname,"w");
-        char ch;
-        while((ch = fgetc(source))!=EOF){
-            fputc(ch,dest);
-        }
-        fclose(dest);
-        fclose(source);
-        SetCurrentDirectory(copy_path);
-        //printf("%s\n",copy_path);
-    }
-    else{
-        perror("invalid address!");
-        exit(EXIT_FAILURE);
-    }
-    //printf("%s\n",_getcwd(NULL,MAX_PATH));
-}
-
-void add_(){
-    if(check() == 0){
-        perror("repo doesn't exist!");
-        exit(EXIT_FAILURE);
-    }
-    char* copy_path = _getcwd(NULL,MAX_PATH);
-    struct dirent* entry;
-    DIR* dir = opendir(".");
-    printf("files and directories:\n");
-    while((entry = readdir(dir))!=NULL){
-        if(strcmp(entry->d_name,".")!= 0 && strcmp(entry->d_name,"..")!=0){
-            printf("%s\n" , entry->d_name);
-        }
-    }
-    printf("staged:\n");
-    SetCurrentDirectory("C:\\sag base");
-    FILE* file = fopen("staging.txt","r");
-    SetCurrentDirectory(copy_path);
-    DIR* directory = opendir(".");
-    struct dirent* entri;
-    char word[200];
-    while((entri = readdir(directory))!=NULL){
-        if(strcmp(entri->d_name,".")!= 0 && strcmp(entri->d_name,"..")!=0){
-            while(fscanf(file,"%s",word)!=EOF){
-                //printf("%s\n",word);
-                if(strcmp(word,entri->d_name)==0){
-                    printf("%s\n" , entri->d_name);
-                }
-            }
-            rewind(file);
-        }
-    }
-    fclose(file);
-    SetCurrentDirectory(copy_path);
-}
-
 void delete(const char *dirPath) {
     char* path = _getcwd(NULL,MAX_PATH);
     DIR *dir = opendir(dirPath);
@@ -370,6 +222,225 @@ void Empty(char *dirPath) {
     }
 
     closedir(dir);
+    SetCurrentDirectory(copy_path);
+}
+
+void add(char* address){
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    char *copy_path = _getcwd(NULL, MAX_PATH);
+    char* path = _getcwd(NULL, MAX_PATH);
+    SetCurrentDirectory("C:\\sag base\\stage");
+    char command[MAX_PATH];
+    sprintf(command,"xcopy ..\\add\\add1 /E");
+    system(command);
+    delete("C:\\sag base\\add\\add1");
+    Empty("C:\\sag base\\add\\add1");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add1");
+    char command1[MAX_PATH];
+    sprintf(command1,"xcopy ..\\add2 /E");
+    system(command1);
+    delete("C:\\sag base\\add\\add2");
+    Empty("C:\\sag base\\add\\add2");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add2");
+    char command2[MAX_PATH];
+    sprintf(command2,"xcopy ..\\add3 /E");
+    system(command2);
+    delete("C:\\sag base\\add\\add3");
+    Empty("C:\\sag base\\add\\add3");
+
+SetCurrentDirectory("C:\\sag base\\add\\add3");
+    char command3[MAX_PATH];
+    sprintf(command3,"xcopy ..\\add4 /E");
+    system(command3);
+    delete("C:\\sag base\\add\\add4");
+    Empty("C:\\sag base\\add\\add4");
+
+SetCurrentDirectory("C:\\sag base\\add\\add4");
+    char command9[MAX_PATH];
+    sprintf(command9,"xcopy ..\\add5 /E");
+    system(command9);
+    delete("C:\\sag base\\add\\add5");
+    Empty("C:\\sag base\\add\\add5");
+
+SetCurrentDirectory("C:\\sag base\\add\\add5");
+    char command4[MAX_PATH];
+    sprintf(command4,"xcopy ..\\add6 /E");
+    system(command4);
+    delete("C:\\sag base\\add\\add6");
+    Empty("C:\\sag base\\add\\add6");
+
+SetCurrentDirectory("C:\\sag base\\add\\add6");
+    char command5[MAX_PATH];
+    sprintf(command5,"xcopy ..\\add7 /E");
+    system(command5);
+    delete("C:\\sag base\\add\\add7");
+    Empty("C:\\sag base\\add\\add7");
+
+SetCurrentDirectory("C:\\sag base\\add\\add7");
+    char command6[MAX_PATH];
+    sprintf(command6,"xcopy ..\\add8 /E");
+    system(command6);
+    delete("C:\\sag base\\add\\add8");
+    Empty("C:\\sag base\\add\\add8");
+
+SetCurrentDirectory("C:\\sag base\\add\\add8");
+    char command7[MAX_PATH];
+    sprintf(command7,"xcopy ..\\add9 /E");
+    system(command7);
+    delete("C:\\sag base\\add\\add9");
+    Empty("C:\\sag base\\add\\add9");
+
+SetCurrentDirectory("C:\\sag base\\add\\add9");
+    char command8[MAX_PATH];
+    sprintf(command8,"xcopy ..\\add10 /E");
+    system(command8);
+    delete("C:\\sag base\\add\\add10");
+    Empty("C:\\sag base\\add\\add10");
+
+
+    SetCurrentDirectory(path);
+    //printf("%s\n",copy_path);
+    struct stat fileStat;
+    stat(address,&fileStat);
+    if (S_ISDIR(fileStat.st_mode)) {
+        char newname[100];
+        for(int i = 0;i<100;i++){
+            newname[i] = 0;
+        }
+        int x;
+        for(int i = 0;i<strlen(address);i++){
+            if(address[strlen(address)-1-i]=='\\'){
+                break;
+            }
+            x = i;
+        }
+        //x = strlen(address)-x;
+        for(int i = 0;i<strlen(address);i++){
+            if(address[strlen(address)-1-i]=='\\'){
+                break;
+            }
+            newname[x-i] = address[strlen(address)-1-i];
+        }
+        SetCurrentDirectory("C:\\sag base");
+        FILE* list = fopen("staging.txt","a");
+        fprintf(list,"%s\n",newname);
+        fclose(list);
+        DIR* dir;
+        struct dirent* entry;
+        SetCurrentDirectory(path);
+        dir = opendir(address);
+        SetCurrentDirectory(address);
+        while((entry = readdir(dir))!=NULL){
+            if(strcmp(entry->d_name,".")!= 0 && strcmp(entry->d_name,"..")!=0 && strcmp(entry->d_name,"sag")!=0){
+                add(entry->d_name);
+            }
+        }
+    } 
+    else if (S_ISREG(fileStat.st_mode)) {
+        char newname[100];
+        for(int i = 0;i<100;i++){
+            newname[i] = 0;
+        }
+        char dirname[200];
+        dirname[0] = '\0';
+        char address_[MAX_PATH];
+        address_[0] = '\0';
+        strcat(address_,path);
+        char* token = strtok(path,"\\:.");
+        while(token != NULL){
+            strcat(dirname,token);
+            token = strtok(NULL,"\\:.");
+        }
+        int x;
+        for(int i = 0;i<strlen(address);i++){
+            if(address[strlen(address)-1-i]=='\\'){
+                break;
+            }
+            x = i;
+        }
+        //x = strlen(address)-x;
+        for(int i = 0;i<strlen(address);i++){
+            if(address[strlen(address)-1-i]=='\\'){
+                break;
+            }
+            newname[x-i] = address[strlen(address)-1-i];
+        }
+        FILE* source = fopen(address,"r");
+        SetCurrentDirectory("C:\\sag base");
+        FILE* list = fopen("staging.txt","a");
+        fprintf(list,"%s\n",newname);
+        fclose(list);
+        SetCurrentDirectory("C:\\sag base\\add\\add10");
+        struct dirent* entri;
+        DIR* directory = opendir(".");
+        int flag = 0;
+        while((entri = readdir(directory))!=NULL){
+            if(strcmp(entri->d_name,dirname)== 0){
+                flag = 1;
+                break;
+            }
+        }
+        if(flag == 0){
+            mkdir(dirname);
+        }
+        SetCurrentDirectory(dirname);
+        FILE* addd = fopen("address.txt","w");
+        fputs(address_,addd);
+        FILE* dest = fopen(newname,"w");
+        char ch;
+        while((ch = fgetc(source))!=EOF){
+            fputc(ch,dest);
+        }
+        //fclose(dest);
+        //fclose(source);
+        SetCurrentDirectory(copy_path);
+        //printf("%s\n",copy_path);
+    }
+    else{
+        perror("invalid address!");
+        exit(EXIT_FAILURE);
+    }
+    //printf("%s\n",_getcwd(NULL,MAX_PATH));
+}
+
+void add_(){
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    char* copy_path = _getcwd(NULL,MAX_PATH);
+    struct dirent* entry;
+    DIR* dir = opendir(".");
+    printf("files and directories:\n");
+    while((entry = readdir(dir))!=NULL){
+        if(strcmp(entry->d_name,".")!= 0 && strcmp(entry->d_name,"..")!=0){
+            printf("%s\n" , entry->d_name);
+        }
+    }
+    printf("staged:\n");
+    SetCurrentDirectory("C:\\sag base");
+    FILE* file = fopen("staging.txt","r");
+    SetCurrentDirectory(copy_path);
+    DIR* directory = opendir(".");
+    struct dirent* entri;
+    char word[200];
+    while((entri = readdir(directory))!=NULL){
+        if(strcmp(entri->d_name,".")!= 0 && strcmp(entri->d_name,"..")!=0){
+            while(fscanf(file,"%s",word)!=EOF){
+                //printf("%s\n",word);
+                if(strcmp(word,entri->d_name)==0){
+                    printf("%s\n" , entri->d_name);
+                }
+            }
+            rewind(file);
+        }
+    }
+    fclose(file);
     SetCurrentDirectory(copy_path);
 }
 
@@ -489,8 +560,83 @@ void reset(char* address){
         fclose(dest);
         fclose(source);
         SetCurrentDirectory("C:\\sag base\\stage");
-        SetCurrentDirectory(dirname);
-        remove(newname);
+        DIR* dir = opendir(dirname);
+        if(dir!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+            
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add1");
+        DIR* dir1 = opendir(dirname);
+        if(dir1!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add2");
+        DIR* dir2 = opendir(dirname);
+        if(dir2!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add3");
+        DIR* dir3 = opendir(dirname);
+        if(dir3!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add4");
+        DIR* dir4 = opendir(dirname);
+        if(dir4!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add5");
+        DIR* dir5 = opendir(dirname);
+        if(dir5!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add6");
+        DIR* dir6 = opendir(dirname);
+        if(dir6!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add7");
+        DIR* dir7 = opendir(dirname);
+        if(dir7!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add8");
+        DIR* dir8 = opendir(dirname);
+        if(dir8!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add9");
+        DIR* dir9 = opendir(dirname);
+        if(dir9!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
+        SetCurrentDirectory("C:\\sag base\\add\\add10");
+        DIR* dir10 = opendir(dirname);
+        if(dir10!=NULL){
+            SetCurrentDirectory(dirname);
+            remove(newname);
+            remove("address.txt");
+        }
         SetCurrentDirectory("C:\\sag base");
         FILE *temp;
         temp = fopen("temp.txt", "w");
@@ -515,16 +661,103 @@ void reset(char* address){
         //printf("%s\n",copy_path);
     }
     Empty("C:\\sag base\\stage");
+    Empty("C:\\sag base\\add\\add1");
+    Empty("C:\\sag base\\add\\add2");
+    Empty("C:\\sag base\\add\\add3");
+    Empty("C:\\sag base\\add\\add4");
+    Empty("C:\\sag base\\add\\add5");
+    Empty("C:\\sag base\\add\\add6");
+    Empty("C:\\sag base\\add\\add7");
+    Empty("C:\\sag base\\add\\add8");
+    Empty("C:\\sag base\\add\\add9");
+    Empty("C:\\sag base\\add\\add10");
     SetCurrentDirectory(copy_path);
+}
+
+void back(){
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    char *copy_path = _getcwd(NULL, MAX_PATH);
+    char* path = _getcwd(NULL, MAX_PATH);
+    delete("C:\\sag base\\add\\add10");
+    Empty("C:\\sag base\\add\\add10");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add10");
+    char command1[MAX_PATH];
+    sprintf(command1,"xcopy ..\\add9 /E");
+    system(command1);
+    delete("C:\\sag base\\add\\add9");
+    Empty("C:\\sag base\\add\\add9");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add9");
+    char command2[MAX_PATH];
+    sprintf(command2,"xcopy ..\\add8 /E");
+    system(command2);
+    delete("C:\\sag base\\add\\add8");
+    Empty("C:\\sag base\\add\\add8");
+
+SetCurrentDirectory("C:\\sag base\\add\\add8");
+    char command3[MAX_PATH];
+    sprintf(command3,"xcopy ..\\add7 /E");
+    system(command3);
+    delete("C:\\sag base\\add\\add7");
+    Empty("C:\\sag base\\add\\add7");
+
+SetCurrentDirectory("C:\\sag base\\add\\add7");
+    char command9[MAX_PATH];
+    sprintf(command9,"xcopy ..\\add6 /E");
+    system(command9);
+    delete("C:\\sag base\\add\\add6");
+    Empty("C:\\sag base\\add\\add6");
+
+SetCurrentDirectory("C:\\sag base\\add\\add6");
+    char command4[MAX_PATH];
+    sprintf(command4,"xcopy ..\\add5 /E");
+    system(command4);
+    delete("C:\\sag base\\add\\add5");
+    Empty("C:\\sag base\\add\\add5");
+
+SetCurrentDirectory("C:\\sag base\\add\\add5");
+    char command5[MAX_PATH];
+    sprintf(command5,"xcopy ..\\add4 /E");
+    system(command5);
+    delete("C:\\sag base\\add\\add4");
+    Empty("C:\\sag base\\add\\add4");
+
+SetCurrentDirectory("C:\\sag base\\add\\add4");
+    char command6[MAX_PATH];
+    sprintf(command6,"xcopy ..\\add3 /E");
+    system(command6);
+    delete("C:\\sag base\\add\\add3");
+    Empty("C:\\sag base\\add\\add3");
+
+SetCurrentDirectory("C:\\sag base\\add\\add3");
+    char command7[MAX_PATH];
+    sprintf(command7,"xcopy ..\\add2 /E");
+    system(command7);
+    delete("C:\\sag base\\add\\add2");
+    Empty("C:\\sag base\\add\\add2");
+
+SetCurrentDirectory("C:\\sag base\\add\\add2");
+    char command8[MAX_PATH];
+    sprintf(command8,"xcopy ..\\add1 /E");
+    system(command8);
+    delete("C:\\sag base\\add\\add1");
+    Empty("C:\\sag base\\add\\add1");
+
+
+    SetCurrentDirectory(path);
 }
 
 void undo_end(){
     char* copy_path = _getcwd(NULL,MAX_PATH);
     struct dirent* entry;
-    DIR* dir = opendir("C:\\sag base\\stage");
+    DIR* dir = opendir("C:\\sag base\\add\\add10");
     while((entry = readdir(dir))!=NULL){
         if(entry -> d_type != DT_DIR){
-            SetCurrentDirectory("C:\\sag base\\stage");
+            SetCurrentDirectory("C:\\sag base\\add\\add10");
             remove(entry->d_name);
         }
     }
@@ -548,14 +781,86 @@ void undo() {
     }
     char *copy_path = _getcwd(NULL, MAX_PATH);
     char* path = _getcwd(NULL, MAX_PATH);
-    DIR* dir = opendir("C:\\sag base\\undo");
+    SetCurrentDirectory("C:\\sag base\\stage");
+    char command[MAX_PATH];
+    sprintf(command,"xcopy ..\\add\\add1 /E");
+    system(command);
+    delete("C:\\sag base\\add\\add1");
+    Empty("C:\\sag base\\add\\add1");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add1");
+    char command1[MAX_PATH];
+    sprintf(command1,"xcopy ..\\add2 /E");
+    system(command1);
+    delete("C:\\sag base\\add\\add2");
+    Empty("C:\\sag base\\add\\add2");
+
+    SetCurrentDirectory("C:\\sag base\\add\\add2");
+    char command2[MAX_PATH];
+    sprintf(command2,"xcopy ..\\add3 /E");
+    system(command2);
+    delete("C:\\sag base\\add\\add3");
+    Empty("C:\\sag base\\add\\add3");
+
+SetCurrentDirectory("C:\\sag base\\add\\add3");
+    char command3[MAX_PATH];
+    sprintf(command3,"xcopy ..\\add4 /E");
+    system(command3);
+    delete("C:\\sag base\\add\\add4");
+    Empty("C:\\sag base\\add\\add4");
+
+SetCurrentDirectory("C:\\sag base\\add\\add4");
+    char command9[MAX_PATH];
+    sprintf(command9,"xcopy ..\\add5 /E");
+    system(command9);
+    delete("C:\\sag base\\add\\add5");
+    Empty("C:\\sag base\\add\\add5");
+
+SetCurrentDirectory("C:\\sag base\\add\\add5");
+    char command4[MAX_PATH];
+    sprintf(command4,"xcopy ..\\add6 /E");
+    system(command4);
+    delete("C:\\sag base\\add\\add6");
+    Empty("C:\\sag base\\add\\add6");
+
+SetCurrentDirectory("C:\\sag base\\add\\add6");
+    char command5[MAX_PATH];
+    sprintf(command5,"xcopy ..\\add7 /E");
+    system(command5);
+    delete("C:\\sag base\\add\\add7");
+    Empty("C:\\sag base\\add\\add7");
+
+SetCurrentDirectory("C:\\sag base\\add\\add7");
+    char command6[MAX_PATH];
+    sprintf(command6,"xcopy ..\\add8 /E");
+    system(command6);
+    delete("C:\\sag base\\add\\add8");
+    Empty("C:\\sag base\\add\\add8");
+
+SetCurrentDirectory("C:\\sag base\\add\\add8");
+    char command7[MAX_PATH];
+    sprintf(command7,"xcopy ..\\add9 /E");
+    system(command7);
+    delete("C:\\sag base\\add\\add9");
+    Empty("C:\\sag base\\add\\add9");
+
+SetCurrentDirectory("C:\\sag base\\add\\add9");
+    char command8[MAX_PATH];
+    sprintf(command8,"xcopy ..\\add10 /E");
+    system(command8);
+    delete("C:\\sag base\\add\\add10");
+    Empty("C:\\sag base\\add\\add10");
+
+
+
+    DIR* dir = opendir("C:\\sag base\\add\\add10");
     struct dirent* entry;
     while((entry = readdir(dir))!= NULL){
-        SetCurrentDirectory("C:\\sag base\\stage");
-        char command[MAX_PATH];
-        sprintf(command,"xcopy ..\\undo\\%s /E", entry->d_name);
-        SetCurrentDirectory("C:\\sag base\\stage");
-        system(command);
+        SetCurrentDirectory("C:\\sag base\\add\\add10");
+        char command10[MAX_PATH];
+        sprintf(command10,"xcopy ..\\undo\\%s /E", entry->d_name);
+        SetCurrentDirectory("C:\\sag base\\add\\add10");
+        system(command10);
 
     }
     undo_end();
@@ -602,6 +907,77 @@ void commit(char* info){
         perror("Please checkout to HEAD!\n");
         exit(EXIT_FAILURE);
     }
+    SetCurrentDirectory("C:\\sag base\\stage");
+    char command[MAX_PATH];
+    sprintf(command,"xcopy ..\\add\\add1 /E");
+    system(command);
+    delete("C:\\sag base\\add\\add1");
+    Empty("C:\\sag base\\add\\add1");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command1[MAX_PATH];
+    sprintf(command1,"xcopy ..\\add\\add2 /E");
+    system(command1);
+    delete("C:\\sag base\\add\\add2");
+    Empty("C:\\sag base\\add\\add2");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command2[MAX_PATH];
+    sprintf(command2,"xcopy ..\\add\\add3 /E");
+    system(command2);
+    delete("C:\\sag base\\add\\add3");
+    Empty("C:\\sag base\\add\\add3");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command3[MAX_PATH];
+    sprintf(command3,"xcopy ..\\add\\add4 /E");
+    system(command3);
+    delete("C:\\sag base\\add\\add4");
+    Empty("C:\\sag base\\add\\add4");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command4[MAX_PATH];
+    sprintf(command4,"xcopy ..\\add\\add5 /E");
+    system(command4);
+    delete("C:\\sag base\\add\\add5");
+    Empty("C:\\sag base\\add\\add5");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command5[MAX_PATH];
+    sprintf(command5,"xcopy ..\\add\\add6 /E");
+    system(command5);
+    delete("C:\\sag base\\add\\add6");
+    Empty("C:\\sag base\\add\\add6");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command6[MAX_PATH];
+    sprintf(command6,"xcopy ..\\add\\add7 /E");
+    system(command6);
+    delete("C:\\sag base\\add\\add7");
+    Empty("C:\\sag base\\add\\add7");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command7[MAX_PATH];
+    sprintf(command7,"xcopy ..\\add\\add8 /E");
+    system(command7);
+    delete("C:\\sag base\\add\\add8");
+    Empty("C:\\sag base\\add\\add8");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command8[MAX_PATH];
+    sprintf(command8,"xcopy ..\\add\\add9 /E");
+    system(command8);
+    delete("C:\\sag base\\add\\add9");
+    Empty("C:\\sag base\\add\\add9");
+
+SetCurrentDirectory("C:\\sag base\\stage");
+    char command9[MAX_PATH];
+    sprintf(command9,"xcopy ..\\add\\add10 /E");
+    system(command9);
+    delete("C:\\sag base\\add\\add10");
+    Empty("C:\\sag base\\add\\add10");
+
+    
     int tedad = number();
     SetCurrentDirectory(path);
     SetCurrentDirectory("sag");
@@ -641,9 +1017,9 @@ void commit(char* info){
     
     mkdir(name);
     SetCurrentDirectory(name);
-    char command[MAX_PATH];
-    sprintf(command,"xcopy ..\\..\\stage /E");
-    system(command);
+    char newcommand[MAX_PATH];
+    sprintf(newcommand,"xcopy ..\\..\\stage /E");
+    system(newcommand);
     delete("C:\\sag base\\stage");
     Empty("C:\\sag base\\stage");
     fclose(file);
@@ -1452,6 +1828,127 @@ void checkout(char* namee){
     SetCurrentDirectory(path);
 }
 
+void checkout_n(int nn){
+char* path = _getcwd(NULL,MAX_PATH);
+    if(check() == 0){
+        perror("repo doesn't exist!");
+        exit(EXIT_FAILURE);
+    }
+    char dirname[200];
+        dirname[0] = '\0';
+        char* token = strtok(path,"\\:.");
+        while(token != NULL){
+            strcat(dirname,token);
+            token = strtok(NULL,"\\:.");
+        }
+    DIR* commit = opendir("C:\\sag base\\commit");
+    DIR* dir = opendir(".");
+    struct dirent* entry;
+    FILE* file = fopen("C:\\sag base\\staging.txt","r");
+    int x;
+    struct dirent* entri;
+    DIR* directory = opendir("C:\\sag base\\commit");
+    struct dirent* hello;
+    struct dirent* search;
+    int index = 0;
+    while((hello = readdir(directory))!=NULL){
+        if(strcmp(hello->d_name,".")!= 0 && strcmp(hello->d_name,"..")!=0){
+            index++;
+        }
+    }
+    index = index/2;
+    while((entry = readdir(dir))!=NULL){
+        if(strcmp(entry->d_name , ".") != 0 && strcmp(entry->d_name,"..")!= 0 && strcmp(entry->d_name,"sag" )!= 0 && entry->d_type == DT_REG){
+            x = 0;
+            FILE* file1 = fopen(entry->d_name,"r");
+            char name[100];
+            name[0] = '\0';
+            int flag = 0;
+            for(int i = index-1;i>=0;i--){
+                sprintf(name,"%d",i);
+                SetCurrentDirectory("C:\\sag base\\commit");
+                SetCurrentDirectory(name);
+                DIR* z = opendir(".");
+                while((entri = readdir(z))!=NULL){
+                    //char* address = _getcwd(NULL,MAX_PATH);
+                    //printf("%s %s\n",entri->d_name,dirname);
+                    //printf("1\n");
+                    if(strcmp(entri->d_name,dirname)==0){
+                        SetCurrentDirectory(dirname);
+                        DIR* place = opendir(".");
+                        while((search = readdir(place))!= NULL){
+                            if(strcmp(search->d_name,entry->d_name)==0){
+                                x = 1;
+                                flag = 1;
+                                FILE* file2 = fopen(search->d_name,"r");
+                                char buffer1[1000];
+                                char buffer2[1000];
+                                while(fgets(buffer1,sizeof(buffer1),file1)){
+                                    fgets(buffer2,sizeof(buffer2),file2);
+                                    if(strcmp(buffer1,buffer2)!=0){
+                                        x = 0;
+                                        break;
+                                    }
+                                }
+                                break;
+                            }
+                            if(flag == 1){
+                                break;
+                            }
+                        }
+                    }
+                    if(flag == 1){
+                        break;
+                    }
+                }
+                if(flag == 1){
+                    break;
+                }
+            }
+        } 
+    }
+    if(x == 0){
+        perror("Please first commit changes!\n");
+        exit(EXIT_FAILURE);
+    }
+
+   SetCurrentDirectory("C:\\sag base\\possible");
+        FILE* possible = fopen("possible.txt","w");
+        fputs("0",possible);
+        SetCurrentDirectory("C:\\sag base\\commit");
+        char nam[100];
+        nam[0] = '\0';
+        sprintf(nam,"%d",index-1-nn);
+        DIR* v = opendir(nam);
+        struct dirent* n;
+        SetCurrentDirectory(nam);
+        while((n=readdir(v))!=NULL){
+            if(strcmp(n->d_name,".")!=0 && strcmp(n->d_name,"..")!=0){
+                SetCurrentDirectory(n->d_name);
+                FILE* address = fopen("address.txt","r");
+                char path_[MAX_PATH];
+                path_[0] = '\0';
+                fgets(path_,sizeof(path_),address);
+                DIR* last = opendir(".");
+                struct dirent* files;
+                char* copy = _getcwd(NULL,MAX_PATH);
+                while((files = readdir(last))!=NULL){
+                    if(strcmp(files->d_name,".")!=0 && strcmp(files->d_name,"..")!=0 && strcmp(files->d_name,"address.txt") != 0){
+                        FILE* source = fopen(files->d_name,"r");
+                        SetCurrentDirectory(path_);
+                        char line[100];
+                        FILE* dest = fopen(files->d_name,"w");
+                        while(fgets(line,sizeof(line),source)){
+                            fputs(line,dest);
+                        }
+                        SetCurrentDirectory(copy);
+
+                    }
+                }
+            }
+        } 
+}
+
 void grep(char* file,char* word){
     char* path = _getcwd(NULL,MAX_PATH);
     if(check() == 0){
@@ -2165,10 +2662,14 @@ int main(int argc , char** argv){
             //printf("1\n");
             add_();
         }
-    }
-    else if(strcmp(argv[1],"reset")==0){
-        if(strcmp(argv[2],"-undo") == 0){
+        else if(strcmp(argv[2],"-redo")==0){
             undo();
+        }
+    }
+    
+    else if(strcmp(argv[1],"reset")==0){
+        if(strcmp(argv[2],"-undo")==0){
+            back();
         }
         else{
             reset(argv[2]);
@@ -2406,9 +2907,11 @@ int main(int argc , char** argv){
             argv[3][strlen(argv[3])] = '\0';
             log_author(argv[3]);
         }
-        else if(argc == 4 &&strcmp(argv[2] , "-search") == 0){
-            argv[3][strlen(argv[3])] = '\0';
-            log_search(argv[3]);
+        else if(strcmp(argv[2] , "-search") == 0){
+            for(int i = 3;i<argc;i++){
+                argv[i][strlen(argv[i])] = '\0';
+                log_search(argv[i]);
+            }
         }
         else if(argc == 5 &&strcmp(argv[2] , "-since") == 0){
             //printf("1\n");
@@ -2442,7 +2945,16 @@ int main(int argc , char** argv){
         }
     }
     else if(strcmp(argv[1],"checkout")==0 && argc == 3){
-        checkout(argv[2]);
+        if(argv[2][0] == 'H' && argv[2][1] == 'E' && argv[2][2] == 'A' && argv[2][3] == 'D' && argv[2][4] == '-'){
+            int nn = 0;
+            for(int i = 5 ; i<strlen(argv[2]);i++){
+                nn = nn*10 + argv[2][i] - 48;
+            }
+            checkout_n(nn);
+        }
+        else{
+            checkout(argv[2]);
+        }
     }
     else if(strcmp(argv[1],"grep") == 0 && argc == 6 && strcmp(argv[2],"-f") == 0 && strcmp(argv[4],"-p") == 0){
         grep(argv[3],argv[5]);
